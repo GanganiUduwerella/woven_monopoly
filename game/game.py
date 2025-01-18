@@ -5,8 +5,9 @@ class Game(object):
         self.board = board
         self.playerList = playerList
         self.bankruptPlayer = None
-        goSpace = self.board.spaceList[0]
-        goSpace.occupants.extend(playerList)
+        for player in playerList:
+            currentPosition = self.board.spaceList[player.currentPosition]
+            currentPosition.occupants.append(player)
     
     def movePlayer(self, playerIndex, spacesToMove):
         player = self.playerList[playerIndex]
