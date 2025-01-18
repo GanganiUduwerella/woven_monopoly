@@ -4,7 +4,7 @@ from game.board import Board, Go, Property
 import json
 
 
-class TestBoard(unittest.TestCase):
+class TestBoardFromJsonFile(unittest.TestCase):
     def setUp(self):
         self.test_json_file = 'test_board.json'
         self.test_data = [
