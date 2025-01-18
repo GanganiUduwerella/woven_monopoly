@@ -1,6 +1,7 @@
 import os
 from game.player import Player
 from game.board import Board
+from game.game import Game
 
 
 def main():
@@ -11,6 +12,13 @@ def main():
 
     boardFile = os.path.join("data", "board.json")
     board = Board.fromJsonFile(boardFile)
+
+    monopolyGame = Game(board=board, playerList = [peter, billy, charlotte, sweedal])
+
+    print(f"Billy is at {billy.currentPosition} with ${billy.money}")
+    monopolyGame.movePlayer(playerIndex=1, spacesToMove=2)
+    print(f"Billy is now at {billy.currentPosition} with ${billy.money}")
+    print(f"Game is over: {monopolyGame.gameIsOver()}")
 
 
 if __name__ == "__main__":

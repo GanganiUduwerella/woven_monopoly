@@ -7,3 +7,10 @@ class Player(object):
         else:
             self.properties = properties
         self.currentPosition = currentPosition
+
+    def moveTo(self, newPosition):
+        previousPosition = self.currentPosition
+        self.currentPosition = newPosition
+        
+        if self.currentPosition < previousPosition:
+            self.money += 1

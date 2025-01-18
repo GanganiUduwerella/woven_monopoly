@@ -27,6 +27,12 @@ class Board(object):
             self.spaceList = []
         else:
             self.spaceList = spaceList
+    
+    def ownerSameForColorOf(self, propertySpace):
+        propertyList = [space for space in self.spaceList if isinstance(space, Property)]
+        sameColorProperies = [p for p in propertyList if p.spaceColour == propertySpace.spaceColour]
+        ownerSameForColor = [p.owner == propertySpace.owner for p in sameColorProperies]
+        return all(ownerSameForColor)
 
     @classmethod
     def fromJsonFile(cls, filename):
@@ -34,23 +40,24 @@ class Board(object):
         with open(filename, 'r') as file:
             data = json.load(file)
 
-        space_list = []
+        spaceList = []
 
-        for space_data in data:
-            space_type = space_data.get("type")
-            space_name = space_data.get("name")
+        for spaceData in data:
+            spaceType = spaceData.get("type")
+            spaceName = spaceData.get("name")
 
-            if space_type == "go":
-                space = Go(spaceName=space_name, spaceType=space_type)
-            elif space_type == "property":
-                space_price = space_data.get("price", 0)
-                space_colour = space_data.get("colour", "None")
-                space = Property(spaceName=space_name, spaceType=space_type, spaceColour=space_colour, spacePrice=space_price)
+            if spaceType == "go":
+                space = Go(spaceName=spaceName, spaceType=spaceType)
+            elif spaceType == "property":
+                space_price = spaceData.get("price", 0)
+                space_colour = spaceData.get("colour", "None")
+                space = Property(spaceName=spaceName, spaceType=spaceType, spaceColour=space_colour, spacePrice=space_price)
             else:
-                space = Space(spaceName=space_name, spaceType=space_type)
+                space = Space(spaceName=spaceName, spaceType=spaceType)
 
             
-            space_list.append(space)
+            spaceList.append(space)
 
        
-        return Board(spaceList=space_list)
+        return Board(spaceList=spaceList)
+    
