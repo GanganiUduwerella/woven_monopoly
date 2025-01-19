@@ -1,3 +1,4 @@
+import json
 from game.board import Property
 
 class Game(object):
@@ -36,26 +37,58 @@ class Game(object):
         return winners
     
     def printResult(self):
-        if not self.gameIsOver():
-            print("Game is not yet over.")
-
-        winners = self.getWinners()
-        if len(winners) == 1:
-            print(f"Winner of the game is {winners[0].name}")
+        print("----------------")
+        if self.gameIsOver():
+            print(f"Game is over.")
+            print("----------------\n")
+            winners = self.getWinners()
+            if len(winners) == 1:
+                print(f"Winner of the game is {winners[0].name}.")
+            else:
+                winnerNames = [w.name for w in winners]
+                print(f"Winners of the game are {winnerNames}.")
+            print("")    
         else:
-            winnerNames = [w.name for w in winners]
-            print(f"Winners of the game are {winnerNames}")
+            print(f"All given moves simulated, but game is not yet over.")
+            print("----------------\n")
         
         for player in self.playerList:
             if player.money < 0:
                 print(f"Player {player.name} is bankrupt.")
             else:
                 print(f"Player {player.name} ends up with ${player.money}.")
+        
+        print("")
     
         for player in self.playerList:
             spacePosition = player.currentPosition
             spaceName = self.board.spaceList[spacePosition].spaceName
             print(f"Player {player.name} finish on space {spacePosition} ({spaceName}).")
+
+    def playFromJsonFile(self, filename):
+        print("----------------")
+        print(f"Simulating game using moves from {filename}.")
+
+        with open(filename, 'r') as file:
+            dice_rolls = json.load(file)
+
+        turn = 0
+        while not self.gameIsOver() and turn < len(dice_rolls):
+            playerIndex = turn % len(self.playerList)
+            player = self.playerList[playerIndex]
+
+            print("----------------")
+            print(f"Player {player.name} is at {player.currentPosition} with ${player.money}.")
+
+            diceRoll = dice_rolls[turn]
+            print(f"Dice roll: {diceRoll}")
+
+            self.movePlayer(playerIndex=playerIndex, spacesToMove=diceRoll)
+            print(f"Player {player.name} is now at {player.currentPosition} with ${player.money}.")
+
+            turn += 1
+
+        self.printResult()
 
     def _buyProperty(self, player, propertySpace):
         player.money -= propertySpace.spacePrice

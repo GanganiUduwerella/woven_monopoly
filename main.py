@@ -1,8 +1,8 @@
 import os
-import random
 from game.player import Player
 from game.board import Board
 from game.game import Game
+from util import selectFile
 
 
 def main():
@@ -12,32 +12,13 @@ def main():
     sweedal = Player(name="Sweedal", money=16, currentPosition=0)
     playerList = [peter, billy, charlotte, sweedal]
 
-    boardFile = os.path.join("data", "board.json")
+    boardFile = selectFile("board.json")
     board = Board.fromJsonFile(boardFile)
 
     monopolyGame = Game(board=board, playerList = playerList)
 
-    print("----------------")
-    print("Simulating game")
-    turn = 0
-    while not monopolyGame.gameIsOver():
-        playerIndex = turn % len(monopolyGame.playerList)
-        player = monopolyGame.playerList[playerIndex]
-        print("----------------")
-        print(f"Player {player.name} is at {player.currentPosition} with ${player.money}.")
-
-        diceRoll = random.randint(1, 6)
-        print(f"Dice roll: {diceRoll}")
-
-        monopolyGame.movePlayer(playerIndex=playerIndex, spacesToMove=diceRoll)
-        print(f"Player {player.name} is now at {player.currentPosition} with ${player.money}.")
-
-        turn += 1
-
-    print("----------------")
-    print(f"Game is over: {monopolyGame.gameIsOver()}")
-    print("----------------\n")
-    monopolyGame.printResult()
+    rollsFile = selectFile("rolls_*.json")
+    monopolyGame.playFromJsonFile(rollsFile)
 
 if __name__ == "__main__":
     main()
