@@ -17,10 +17,12 @@ def main():
 
     monopolyGame = Game(board=board, playerList = playerList)
 
+    print("----------------")
+    print("Simulating game")
     turn = 0
     while not monopolyGame.gameIsOver():
-        playerIndex = turn % len(playerList)
-        player = playerList[playerIndex]
+        playerIndex = turn % len(monopolyGame.playerList)
+        player = monopolyGame.playerList[playerIndex]
         print("----------------")
         print(f"Player {player.name} is at {player.currentPosition} with ${player.money}.")
 
@@ -32,8 +34,10 @@ def main():
 
         turn += 1
 
+    print("----------------")
     print(f"Game is over: {monopolyGame.gameIsOver()}")
-
+    print("----------------\n")
+    monopolyGame.printResult()
 
 if __name__ == "__main__":
     main()

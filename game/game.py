@@ -30,8 +30,32 @@ class Game(object):
     def gameIsOver(self):
         return self.bankruptPlayer is not None
     
-    def getWinner(self):
-        max(self.playerList, key=lambda player: player.money)
+    def getWinners(self):
+        max_money = max(player.money for player in self.playerList)
+        winners = [player for player in self.playerList if player.money == max_money]
+        return winners
+    
+    def printResult(self):
+        if not self.gameIsOver():
+            print("Game is not yet over.")
+
+        winners = self.getWinners()
+        if len(winners) == 1:
+            print(f"Winner of the game is {winners[0].name}")
+        else:
+            winnerNames = [w.name for w in winners]
+            print(f"Winners of the game are {winnerNames}")
+        
+        for player in self.playerList:
+            if player.money < 0:
+                print(f"Player {player.name} is bankrupt.")
+            else:
+                print(f"Player {player.name} ends up with ${player.money}.")
+    
+        for player in self.playerList:
+            spacePosition = player.currentPosition
+            spaceName = self.board.spaceList[spacePosition].spaceName
+            print(f"Player {player.name} finish on space {spacePosition} ({spaceName}).")
 
     def _buyProperty(self, player, propertySpace):
         player.money -= propertySpace.spacePrice
